@@ -1,7 +1,8 @@
-# Stack (WIP)
+**Note: This project is a work in progress**
+
+# Stack
 
 Production ready stack to simplify deployment of Akash
-
 ## Layers and Components
 
 - [Layer 0](layer0): Bare metal servers on packet, provisioned using Terraform
