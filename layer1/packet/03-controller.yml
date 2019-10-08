@@ -1,0 +1,88 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: csi-packet-pd
+  labels:
+    app: csi-packet-pd
+spec:
+  selector:
+    app: csi-packet-pd
+  ports:
+    - name: dummy
+      port: 12345
+
+---
+
+kind: StatefulSet
+apiVersion: apps/v1beta1
+metadata:
+  name: csi-packet-controller
+  namespace: kube-system
+spec:
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0
+  serviceName: "csi-packet-pd"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csi-packet-pd-driver
+  template:
+    metadata:
+      labels:
+        app: csi-packet-pd-driver
+    spec:
+      serviceAccount: csi-controller-sa
+      containers:
+        - name: csi-external-provisioner
+          imagePullPolicy: IfNotPresent
+          image: quay.io/k8scsi/csi-provisioner:v1.4.0
+          args:
+            - "--v=5"
+            - "--provisioner=net.packet.csi"
+            - "--csi-address=$(ADDRESS)"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: csi-attacher
+          imagePullPolicy: IfNotPresent
+          image: quay.io/k8scsi/csi-attacher:v2.0.0
+          args:
+            - "--v=5"
+            - "--csi-address=$(ADDRESS)"
+          env:
+            - name: ADDRESS
+              value: /csi/csi.sock
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+        - name: packet-driver
+          imagePullPolicy: Always
+          image: docker.io/packethost/csi-packet:1c039e3
+          args:
+            - "--endpoint=$(CSI_ENDPOINT)"
+            - "--nodeid=$(KUBE_NODE_NAME)"
+            - "--config=/etc/cloud-sa/cloud-sa.json"
+          env:
+            - name: CSI_ENDPOINT
+              value: unix:///csi/csi.sock
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          volumeMounts:
+            - name: socket-dir
+              mountPath: /csi
+            - name: cloud-sa-volume
+              readOnly: true
+              mountPath: "/etc/cloud-sa"
+      volumes:
+        - name: socket-dir
+          emptyDir: {}
+        - name: cloud-sa-volume
+          secret:
+            secretName: packet-cloud-config

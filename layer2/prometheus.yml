@@ -1,0 +1,10 @@
+server:
+  ingress:
+    enabled: true
+    hosts:
+      - metrics.ovrclk.net
+  persistentVolume:
+    enabled: false
+alertmanager:
+  persistentVolume:
+    enabled: false
