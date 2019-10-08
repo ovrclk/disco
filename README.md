@@ -8,7 +8,7 @@ A secure, scalable, standardized software stack for developing, delivering, and 
 
 A notable majority of blockchain nodes are deployed on three providers (Amazon, Google, and Microsoft) -- contrary to their values of decentralization.
 
-Over (60% of the Ethereum nodes run on one)[(https://thenextweb-com.cdn.ampproject.org/c/s/thenextweb.com/hardfork/2019/09/23/ethereum-nodes-cloud-services-amazon-web-services-blockchain-hosted-decentralization/amp)] on Amazon alone.
+Over [60% of the Ethereum nodes run on one](https://thenextweb-com.cdn.ampproject.org/c/s/thenextweb.com/hardfork/2019/09/23/ethereum-nodes-cloud-services-amazon-web-services-blockchain-hosted-decentralization/amp) on Amazon alone.
 
 Our priority at [Akash](https://akash.network) is to help the community at large retain core values without compromising convenience by offering them a platform that's far richer than the cloud providers.
 
