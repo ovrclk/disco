@@ -1,8 +1,9 @@
 **Note: This project is a work in progress**
 
-# Stack
+# disco
+Decentralized Infrastructure for Serverless Computing Operations (DISCO) is a secure, scalable, standardized software stack for developing, delivering, and debugging decentralized networks.
 
-A secure, scalable, standardized software stack for developing, delivering, and debugging decentralized networks.
+Check out this [announcement](https://techcrunch.com/2017/11/21/overclock-labs-bets-on-kubernetes-to-help-companies-automate-their-cloud-infrastructure) post about DISCO.
 
 ## Motivation
 
