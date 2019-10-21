@@ -3,6 +3,7 @@
 ## Kubernetes
 
 # Packet CSI deploy
+
 Copy deploy/template/secret.yaml to a local file:
 
 ```
