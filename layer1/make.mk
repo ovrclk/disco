@@ -1,5 +1,5 @@
 L1DIR ?= $(CURDIR)
-CSP 	?= packet
+CSP 					 = packet
 KUBE_NAMESPACE = kube-system
 
 layer1-install: kube-install helm-install kube-csi-install
@@ -68,10 +68,10 @@ kube-csp-remove:
 .PHONY: .PHONY kube-csp-install kube-csp-remove 
 
 kube-csp-secret-install:
-	$(KC) kubectl apply --wait -f $(DATADIR)/csp-secret/$(CSP).yml
+	$(KC) kubectl apply --wait -f $(DATADIR)/db/config/csps/secrets/$(CSP).yml
 
 kube-csp-secret-remove:
-	$(KC) kubectl delete -f $(DATADIR)/csp-secret/$(CSP).yml
+	$(KC) kubectl delete -f $(DATADIR)/db/config/csps/secrets/$(CSP).yml
 
 kube-csi-install: kube-csp-secret-install
 	$(KC) helm install $(L1DIR)/csi/$(CSP) -n csi-$(CSP)

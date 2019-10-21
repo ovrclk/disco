@@ -1,17 +1,23 @@
-# Layer 0
+# layer0
 
-Terraform scripts for provisioning a bare metal servers on Packet.  Extreme caution must be excercized when making changes.
+Core Infrastructure scripts for managing Overclock Labs Infrastructure
+
+Terraform scripts for provisioning core Overclock Servers on Packet. These servers manage critical overclock infrastructure
+
+Extreme caution must be excercized when making changes.
+
+Status: [status.ovrclk.net](https://status.ovrclk.net)
 
 ## Authentication
 
 ## ENV Variables
 
 - `TF_VAR_packet_auth_token`: Authentication Token for Packet
-- `TF_VAR_packet_project_id`: Packet Project ID
+- `TF_VAR_cloudflare_token`: Authentication Token for Cloudflare
 
 ## Terraform Cloud
 
-Sign up for an account on [Terraform Cloud](https://app.terraform.io). Once you have access, create a auth token and terraform config file
+Please ask an Adminstrator for access to ovrclk on [Terraform Cloud](https://app.terraform.io/app/ovrclk). Once you have access, create a auth token and terraform config file
 
 ```
 $ export TF_TOKEN=5lsdovPZB...
@@ -30,6 +36,8 @@ credentials "app.terraform.io" {
 
 To install dependencies on OSX using brew, run `brew update && brew install terraform`
 
-### Ansible
+## Usage
 
-`$ sudo pip install ansible`
+- init: `make init`
+- plan: `make plan`
+- apply: `make apply`
