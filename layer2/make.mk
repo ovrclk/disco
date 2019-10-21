@@ -2,9 +2,9 @@ L2DIR 				?= $(PWD)
 L2_NAMESPACE 	= monitoring
 L2_DOMAIN 		= $(HOST)
 
-layer2-install: monitoring-ns-create prometheus-install grafana-install metrics-install
+layer2-install: monitoring-ns-create prometheus-install grafana-install metrics-install logdna-install
 
-layer2-remove: prometheus-remove grafana-remove metrics-remove monitoring-ns-remove
+layer2-remove: prometheus-remove grafana-remove metrics-remove monitoring-ns-remove logdna-remove
 
 layer2-install.%:
 	$(eval host := $(@:layer2-install.%=%))
@@ -52,4 +52,15 @@ grafana-install:
 grafana-remove:
 	$(KC) helm del --purge grafana
 
+
 .PHONY: .PHONY grafana-install grafana-remove
+
+logdna-install:
+	$(KC) kubectl create --namespace $(L2_NAMESPACE) secret generic logdna-agent-key --from-literal=logdna-agent-key=$(shell cat $(DATADIR)/db/config/csps/secrets/logdna.key)
+	$(KC) kubectl apply --namespace $(L2_NAMESPACE) -f https://raw.githubusercontent.com/logdna/logdna-agent/master/logdna-agent-ds.yaml
+
+logdna-remove:
+	$(KC) kubectl delete --namespace $(L2_NAMESPACE) secret logdna-agent-key 
+	$(KC) kubectl delete --namespace $(L2_NAMESPACE) -f https://raw.githubusercontent.com/logdna/logdna-agent/master/logdna-agent-ds.yaml
+
+.PHONY: logdna-install logdna-remove
