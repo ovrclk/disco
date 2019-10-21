@@ -1,10 +1,14 @@
+BASEDIR = $(PWD)
 include common.mk
 
-L0DIR = layer0
-include $(L0DIR)/make.mk
+L0DIR = $(BASEDIR)/layer0
+include layer0/make.mk
 
-L1DIR = layer1
-include $(L1DIR)/make.mk
+L1DIR = $(BASEDIR)/layer1
+include layer1/make.mk
 
-L2DIR = layer2
-include $(L2DIR)/make.mk
+L2DIR = $(BASEDIR)/layer2
+include layer2/make.mk
+
+L3DIR = $(BASEDIR)/layer3
+include layer3/make.mk
