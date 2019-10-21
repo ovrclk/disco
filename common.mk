@@ -1,43 +1,45 @@
-DATA_REPO 	= keybase://team/akashnet/testnet
-DATADIR 		= $(BASEDIR)/data
-DB = $(DATADIR)/db
-# index for common resources
-DBIDX = $(DB)/index
-DBCFG = $(DB)/config
-DBKEY = $(DB)/keys
+# Config database setup, see USAGE.md for details
+#
+DATA_REPO = keybase://team/akashnet/testnet
+DATADIR   = $(BASEDIR)/data
+DB        = $(DATADIR)/db
 
-DB_NODES 			= $(shell cat $(DATADIR)/db/index/NODES)
-DB_HOSTS 			= $(shell cat $(DATADIR)/db/index/HOSTS)
-DB_ACCOUNTS 			= $(shell cat $(DATADIR)/db/index/ACCOUNTS)
-DB_PROVIDERS 			= $(shell cat $(DATADIR)/db/index/PROVIDERS)
+# Indexes for common resources
+#
+DBIDX        = $(DB)/index
+DBCFG        = $(DB)/config
+DBKEY        = $(DB)/keys
+DB_NODES     = $(shell cat $(DATADIR)/db/index/NODES)
+DB_HOSTS     = $(shell cat $(DATADIR)/db/index/HOSTS)
+DB_ACCOUNTS  = $(shell cat $(DATADIR)/db/index/ACCOUNTS)
+DB_PROVIDERS = $(shell cat $(DATADIR)/db/index/PROVIDERS)
 
 GITCMD = git --git-dir $(DATADIR)/.git --work-tree $(DATADIR) 
 
-# danger
+db-save: db-commit db-rebase db-push
+
+# Resets the DB, use with caution
 db-clean:
+	@echo "Are you sure? This action is reversable with only with git reset [y/N] " && read ans && [ $${ans:-N} = y ]
 	rm -r $(DATADIR)/*
 
+# Rebases the DB with remote, use with caution
 db-rebase:
 	[ -d "$(DATADIR)" ] || git clone $(DATA_REPO) $(DATADIR)
 	$(GITCMD) pull --rebase origin master
-
-db-save: db-commit db-rebase db-push
 
 db-push: 
 	$(GITCMD) push origin master
 
 db-commit:
 	[[ -z "$(shell $(GITCMD) status -s)" ]] || $(GITCMD) add $(DATADIR) \
-		|| $(GITCMD) commit -asm "$(USER)@$(shell hostname)"
+		&& $(GITCMD) commit -asm "$(USER)@$(shell hostname)"
 
-setup:
-	mkdir -p $(DB)/config/kube \
-		$(DATADIR)/config/providers \
-		$(DATADIR)/config/nodes \
-		$(DBKEY)
+db-setup: mkdir -p $(DBIDX) $(DBCFG)/providers $(DBCFG)/nodes $(DBKEY)
 
-# default host
-HOST 				= sjc1.ovrclk.net
+setup: db-setup
+
+HOST 				= sjc1.ovrclk.net # default host
 DOMAIN 			= $(HOST)
 MASTER_IP 	= $(shell dig +short $(HOST))
 KUBECONFIG	= $(DATADIR)/db/config/kube/$(HOST)
