@@ -1,9 +1,45 @@
-DATA_REPO 	= keybase://team/$(USER)/disco
+DATA_REPO 	= keybase://team/akashnet/testnet
+DATADIR 		= $(BASEDIR)/data
+DB = $(DATADIR)/db
+# index for common resources
+DBIDX = $(DB)/index
+DBCFG = $(DB)/config
+DBKEY = $(DB)/keys
 
+DB_NODES 			= $(shell cat $(DATADIR)/db/index/NODES)
+DB_HOSTS 			= $(shell cat $(DATADIR)/db/index/HOSTS)
+DB_ACCOUNTS 			= $(shell cat $(DATADIR)/db/index/ACCOUNTS)
+DB_PROVIDERS 			= $(shell cat $(DATADIR)/db/index/PROVIDERS)
+
+GITCMD = git --git-dir $(DATADIR)/.git --work-tree $(DATADIR) 
+
+# danger
+db-clean:
+	rm -r $(DATADIR)/*
+
+db-rebase:
+	[ -d "$(DATADIR)" ] || git clone $(DATA_REPO) $(DATADIR)
+	$(GITCMD) pull --rebase origin master
+
+db-save: db-commit db-rebase db-push
+
+db-push: 
+	$(GITCMD) push origin master
+
+db-commit:
+	[[ -z "$(shell $(GITCMD) status -s)" ]] || $(GITCMD) add $(DATADIR) \
+		|| $(GITCMD) commit -asm "$(USER)@$(shell hostname)"
+
+setup:
+	mkdir -p $(DB)/config/kube \
+		$(DATADIR)/config/providers \
+		$(DATADIR)/config/nodes \
+		$(DBKEY)
+
+# default host
 HOST 				= sjc1.ovrclk.net
 DOMAIN 			= $(HOST)
 MASTER_IP 	= $(shell dig +short $(HOST))
-DATADIR 		= $(BASEDIR)/data
 KUBECONFIG	= $(DATADIR)/db/config/kube/$(HOST)
 K3S_VERSION = v0.9.0
 SSHUSER 		= root
@@ -12,7 +48,6 @@ KC					= KUBECONFIG=$(KUBECONFIG)
 KCTL 				= $(KC) kubectl 
 
 ALL_HOSTS =  $(shell cat $(DATADIR)/db/index/HOSTS)
-GITCMD = git --git-dir $(DATADIR)/.git --work-tree $(DATADIR) 
 
 # helpers
 # a literal space.
@@ -23,27 +58,6 @@ comma := ,
 #   1. Element separator.
 #   2. The list.
 join-with = $(subst $(space),$1,$(strip $2))
-
-data-pull:
-	[ -d "$(DATADIR)" ] || git clone $(DATA_REPO) $(DATADIR)
-	cd $(DATADIR) && git pull --rebase origin master
-
-data-push:
-	[[ -z "$(shell $(GITCMD) status -s)" ]] || $(MAKE) data-commit-push
-
-data-commit-push:
-	$(GITCMD) add . \
-		&& $(GITCMD) commit -asm "$$USER@$(shell hostname)" \
-		&& $(GITCMD) $(DATADIR) push origin master
-
-setup:
-	mkdir -p $(DATADIR)/kube $(DATADIR)/providers
-
-hosts:
-	cat $(DATADIR)/hosts
-	
-clean:
-	rm -r $(DATADIR)/*
 
 kube-config: setup
 	k3su install --ip $(MASTER_IP) --user $(SSHUSER) --skip-install --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION)

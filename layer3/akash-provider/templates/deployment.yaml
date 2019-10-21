@@ -57,5 +57,5 @@ spec:
           secret:
             secretName: {{ .Values.provider.privateKeySecretName | default (printf "%s-private-key" (include "akash-provider.fullname" .)) }} 
             items:
-              - key: key
+              - key: {{ .Release.Name }}.private
                 path: private.key
