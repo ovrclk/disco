@@ -25,11 +25,15 @@ DISCO’s secure, scalable and modular design offers below features:
 - **Secure Configuration Store**: DISCO offers configuration DB built on Keybase, an end-to-end encrypted private git repository to securely collaborate with team members and simplify automation.
 - **Observability**: DISCO offers observability with Industry-standard cloud-native toolsets such as Prometheus and Graphana.
 
+## Demo
+
+[![asciicast](https://asciinema.org/a/276427.svg)](https://asciinema.org/a/276427)
+
 ## Get Started
 
 To get started, check out [setup guide](setup.md)
 
-### Motivation
+## Motivation
 
 A notable majority of blockchain nodes are deployed on three providers (Amazon, Google, and Microsoft) -- contrary to their values of decentralization. Over [60% of the Ethereum nodes run on Amazon](https://thenextweb-com.cdn.ampproject.org/c/s/thenextweb.com/hardfork/2019/09/23/ethereum-nodes-cloud-services-amazon-web-services-blockchain-hosted-decentralization/amp) alone.
 
