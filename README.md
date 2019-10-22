@@ -1,6 +1,7 @@
 **Note: This project is a work in progress, expect dragons**. Join our [Matrix room](https://akash.network/chat) if you're interesting in deploying DISCO for production.
 
 # DISCO
+![Disco](disco.png)
 
 Decentralized Infrastructure for Serverless Computing Operations (DISCO) is a secure, scalable, standardized software stack for developing, delivering, and debugging decentralized networks.
 
@@ -56,7 +57,7 @@ Below is a high-level roadmap planned, checkout [Akash Roadmap](http://akash.net
 
 ## About the Author
 
-In the past ten years, my focus has been designing, building and managing distributed systems that scale to millions of individuals across the globe. From designing Kaiser’s first cloud platform in 2010 (long before the term “cloud” was coined) to deploying planetary-scale infrastructure at various hyper-growth technology companies in silicon valley. 
+In the past ten years, my focus has been designing, building and managing distributed systems that scale to millions of individuals across the globe. From designing Kaiser’s first cloud platform in 2010 (long before the term “cloud” was coined) to deploying planetary-scale infrastructure at various hyper-growth technology companies in silicon valley.
 
 I created the [Akash Network](https://akash.network) to help bring that expertise to the masses. Prior to Akash, I co-founded [AngelHack](http://angelhack.com), the world’s largest hackathon organization with over 100,000 developers across 50 cities worldwide and helped launch several developer companies including [Firebase](http://firebase.com) (acquired by Google).
 
