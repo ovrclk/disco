@@ -1,12 +1,29 @@
-:construction: **Note: This project is a work in progress, expect dragons**. Join our [Matrix room](https://akash.network/chat) if you're interesting in deploying DISCO for production.
+**Note: This project is a work in progress, expect dragons**. Join our [Matrix room](https://akash.network/chat) if you're interesting in deploying DISCO for production.
 
-# DISCO :dancers: 
+# DISCO
 
 Decentralized Infrastructure for Serverless Computing Operations (DISCO) is a secure, scalable, standardized software stack for developing, delivering, and debugging decentralized networks.
 
 Check out this [announcement](https://techcrunch.com/2017/11/21/overclock-labs-bets-on-kubernetes-to-help-companies-automate-their-cloud-infrastructure) post about DISCO.
 
-## Motivation
+## The Disco Way
+
+DISCO is a methodology and a framework for deploying modern, scalable and secure services.
+
+- **Composable**: Infrastructure components should be simple to compose. Each service should be functional in design, meaning a well-defined set of inputs and outputs. Services should use declarative formats for setup automation, to minimize time and cost for service operators deploying the project.
+- **Configurable**: All configuration variables should be explicitly declared and should be set using operating systems standards (such as Environment variables). Each variable should be well documented.
+- **Explicit Dependencies:** Dependencies should be explicitly declared and isolated. Services should never rely on the implicit existence of system-wide packages.
+- **Hackable:** Use commonly available scripting frameworks (such as Make) to allow operators to easily make changes. DISCO is entirely made with make.
+
+## Features
+
+DISCO’s secure, scalable and modular design offers below features:
+
+- **Kubernetes on Baremetal**: Plug-and-Play Kubernetes with k3s and k3sup on Bare Metal Servers with support of Packet (Join our chat if you’d like us to hook you up with a key).
+- **Secure Configuration Store**: DISCO offers configuration DB built on Keybase, an end-to-end encrypted private git repository to securely collaborate with team members and simplify automation.
+- **Observability**: DISCO offers observability with Industry-standard cloud-native toolsets such as Prometheus and Graphana.
+
+### Motivation
 
 A notable majority of blockchain nodes are deployed on three providers (Amazon, Google, and Microsoft) -- contrary to their values of decentralization. Over [60% of the Ethereum nodes run on Amazon](https://thenextweb-com.cdn.ampproject.org/c/s/thenextweb.com/hardfork/2019/09/23/ethereum-nodes-cloud-services-amazon-web-services-blockchain-hosted-decentralization/amp) alone.
 
@@ -21,51 +38,21 @@ Our priority at [Akash](https://akash.network) is to help the broader community 
 - [Layer 4](layer4): Services (Blockchains such as Cosmos Hub and NuCypher)
 - [Sanity Check](sanity): Cluster readiness checks for Akash.
 
-## Features
-
-DISCO’s secure, scalable and modular design offers below features:
-
-- :rocket: **Kubernetes on Baremetal**: Plug-and-Play Kubernetes with k3s and k3sup on Bare Metal Servers with support of Packet (Join our chat if you’d like us to hook you up with a key).
-- :lock: **Secure Configuration Store**: DISCO offers configuration DB built on Keybase, an end-to-end encrypted private git repository to securely collaborate with team members and simplify automation.
-- :microscope: **Observability**: DISCO offers observability with Industry-standard cloud-native toolsets such as Prometheus and Graphana.
-
 ## Contributing and Roadmap
 
-Below is a high-level roadmap planned, checkout Akash Development for current progress on the Roadmap. If you’d like to contribute, please check out our contributing guide.
+Below is a high-level roadmap planned, checkout [Akash Roadmap](http://akash.network/roadmap) for current progress on the Roadmap. If you’d like to contribute, please check out our contributing guide.
 
-### Core:
-
+### Core
 - **SGX Services**: SGX wrappers for Vault, Tendermint, and others. Possibly, generic container wrappers.
 - **Kata Containers**: Kata Containers are a secure container runtime with lightweight virtual machines that feel and perform like containers, but provide stronger workload isolation using hardware virtualization technology as a second layer of defense.
 - **GitHub Actions**: Integration for CI/CD workflow automation using GitHub actions.
 
 ### Services
-
 - **Cosmos Hub**: Support for deploying Gaia Full node and validators.
 - **Interledger Connectors**: Interledger is an open protocol suite for sending payments across different ledgers. Support for deploying Interledger Connectors.
 - **NuCypher**: NyCypher provides cryptographic infrastructure for privacy-preserving applications.
 
-## Required Setup
-
-### Keybase
-
-Keybase offers an end-to-end and cloud storage system that lets us to share sensitive information (such as private keys) between your workstation and the network. Check out this guide (https://keybase.io/download) to set up keybase on your workstation. To confirm keybase is setup properly, run the below:
-
-```shell
-keybase id
-```
-
-The above should return a response similar to:
-
-```
-▶ INFO Identifying kn0tch
-✔ public key fingerprint: F731 6454 2118 DB51 44A1 655C 3CF6 8C6B 14A1 03D5
-🚀  Stellar GAIYPV7OIZST7WXCYVLYO3FBJPCHAXI3Y4S6FQ64KC7CWN4R2OQO6B5L (kn0tch*keybase.io)
-✔ "gregosuri" on twitter: https://twitter.com/gregosuri/status/1179220421465518082 [cached ...
-✔ "gosuri" on github: https://gist.github.com/9818622 [cached ...
-✔ "gosuri" on hackernews: https://news.ycombinator.com/user?id=gosuri [cached ...
-✔ admin of DNS zone gregosuri.com: found TXT entry keybase-site-verification=AAP3mKWHM8sATAPK....
-```
+- **Your Blockchain**: If you would like to add your blockchain, get in [touch](http://akash.network/chat).
 
 ## About the Author
 
