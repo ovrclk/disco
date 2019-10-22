@@ -25,6 +25,10 @@ DISCO’s secure, scalable and modular design offers below features:
 - **Secure Configuration Store**: DISCO offers configuration DB built on Keybase, an end-to-end encrypted private git repository to securely collaborate with team members and simplify automation.
 - **Observability**: DISCO offers observability with Industry-standard cloud-native toolsets such as Prometheus and Graphana.
 
+## Get Started
+
+To get started, check out [setup guide](setup.md)
+
 ### Motivation
 
 A notable majority of blockchain nodes are deployed on three providers (Amazon, Google, and Microsoft) -- contrary to their values of decentralization. Over [60% of the Ethereum nodes run on Amazon](https://thenextweb-com.cdn.ampproject.org/c/s/thenextweb.com/hardfork/2019/09/23/ethereum-nodes-cloud-services-amazon-web-services-blockchain-hosted-decentralization/amp) alone.
@@ -53,8 +57,8 @@ Below is a high-level roadmap planned, checkout [Akash Roadmap](http://akash.net
 - **Cosmos Hub**: Support for deploying Gaia Full node and validators.
 - **Interledger Connectors**: Interledger is an open protocol suite for sending payments across different ledgers. Support for deploying Interledger Connectors.
 - **NuCypher**: NyCypher provides cryptographic infrastructure for privacy-preserving applications.
+- **Your Blockchain?**: If you would like to add your blockchain, get in [touch](http://akash.network/chat).
 
-- **Your Blockchain**: If you would like to add your blockchain, get in [touch](http://akash.network/chat).
 
 ## About the Author
 
