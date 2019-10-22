@@ -23,9 +23,14 @@ GITCMD = git --git-dir $(DATADIR)/.git --work-tree $(DATADIR)
 db-save: db-commit db-rebase db-push
 
 db-setup: 
+<<<<<<< HEAD
 	git clone $(DATA_REPO) $(DATDIR)
 	mkdir -p $(DBIDX) $(DBCFG)/providers $(DBCFG)/nodes $(DBKEY)
 
+=======
+	git clone $(DATA_REPO)
+	mkdir -p $(DBIDX) $(DBCFG)/providers $(DBCFG)/nodes $(DBKEY)
+>>>>>>> master
 # Resets the DB, use with caution
 #
 db-clean:
