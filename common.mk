@@ -1,53 +1,16 @@
-# Config database setup, see USAGE.md for details
-#
-DATA_REPO = keybase://team/akashnet/testnet
-DATADIR   = $(BASEDIR)/data
-DB        = $(DATADIR)/db
-
-# Indexes for common resources
-#
-DBIDX        = $(DB)/index
-DBCFG        = $(DB)/config
-DBKEY        = $(DB)/keys
-DB_NODES     = $(shell cat $(DATADIR)/db/index/NODES)
-DB_HOSTS     = $(shell cat $(DATADIR)/db/index/HOSTS)
-DB_ACCOUNTS  = $(shell cat $(DATADIR)/db/index/ACCOUNTS)
-DB_PROVIDERS = $(shell cat $(DATADIR)/db/index/PROVIDERS)
-
-GITCMD = git --git-dir $(DATADIR)/.git --work-tree $(DATADIR) 
-
-db-save: db-commit db-rebase db-push
-
-# Resets the DB, use with caution
-db-clean:
-	@echo "Are you sure? This action is reversable with only with git reset [y/N] " && read ans && [ $${ans:-N} = y ]
-	rm -r $(DATADIR)/*
-
-# Rebases the DB with remote, use with caution
-db-rebase:
-	[ -d "$(DATADIR)" ] || git clone $(DATA_REPO) $(DATADIR)
-	$(GITCMD) pull --rebase origin master
-
-db-push: 
-	$(GITCMD) push origin master
-
-db-commit:
-	[[ -z "$(shell $(GITCMD) status -s)" ]] || $(GITCMD) add $(DATADIR) \
-		&& $(GITCMD) commit -asm "$(USER)@$(shell hostname)"
-
-db-setup: mkdir -p $(DBIDX) $(DBCFG)/providers $(DBCFG)/nodes $(DBKEY)
+include $(BASEDIR)/db.mk
 
 setup: db-setup
 
-HOST 				= sjc1.ovrclk.net # default host
-DOMAIN 			= $(HOST)
-MASTER_IP 	= $(shell dig +short $(HOST))
-KUBECONFIG	= $(DATADIR)/db/config/kube/$(HOST)
-K3S_VERSION = v0.9.0
-SSHUSER 		= root
-RELEASE 		= kernel
-KC					= KUBECONFIG=$(KUBECONFIG)
-KCTL 				= $(KC) kubectl 
+HOST 				:= node.$(MACHINE_ZONE) # default host
+DOMAIN 			:= $(HOST)
+MASTER_IP 	:= $(shell dig +short $(HOST))
+KUBECONFIG	:= $(DATADIR)/db/config/kube/$(HOST)
+K3S_VERSION := v0.9.0
+SSHUSER 		:= root
+RELEASE 		:= kernel
+KC					:= KUBECONFIG=$(KUBECONFIG)
+KCTL 				:= $(KC) kubectl
 
 ALL_HOSTS =  $(shell cat $(DATADIR)/db/index/HOSTS)
 
