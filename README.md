@@ -1,7 +1,8 @@
 **Note: This project is a work in progress, expect dragons**. Join our [Matrix room](https://akash.network/chat) if you're interesting in deploying DISCO for production.
 
-# DISCO
 ![Disco](disco.png)
+
+# DISCO
 
 Decentralized Infrastructure for Serverless Computing Operations (DISCO) is a secure, scalable, standardized software stack for developing, delivering, and debugging decentralized networks.
 
