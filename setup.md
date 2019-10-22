@@ -1,3 +1,17 @@
+## Dependencies
+
+Install the below dependencies
+
+- Terraform
+- [k2sup](https://github.com/alexellis/k3sup)
+- GNU Make
+
+## Clone the project
+
+```
+$ git clone https://github.com/ovrclk/disco
+```
+
 ## TeamOps
 
 Throught the guide, we'll be using environment variables to simplify our workflow.
