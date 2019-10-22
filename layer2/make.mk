@@ -2,9 +2,9 @@ L2DIR 				?= $(PWD)
 L2_NAMESPACE 	= monitoring
 L2_DOMAIN 		= $(HOST)
 
-layer2-install: monitoring-ns-create prometheus-install grafana-install metrics-install logdna-install
+layer2-install: monitoring-ns-create prometheus-install grafana-install metrics-install
 
-layer2-remove: prometheus-remove grafana-remove metrics-remove monitoring-ns-remove logdna-remove
+layer2-remove: prometheus-remove grafana-remove metrics-remove monitoring-ns-remove
 
 layer2-install.%:
 	$(eval host := $(@:layer2-install.%=%))

@@ -78,6 +78,6 @@ kube-csp-secret-remove:
 
 kube-csp-secret-install-packet:
 	mkdir -p $(DATADIR)/db/config/csps/secrets/$(CSP)
-	echo "\{ \"apiKey\": \"$(PACKET_API_KEY)\", \"projectID\":\"$(PACKET_PROJECT_ID)\"}" > $(DBCFG)/csps/secrets/$(CSP)/cloud-sa.json
-	$(KCTL) create --namespace $(KUBE_NAMESPACE) secret generic packet-cloud-config  --from-file=$(DBCFG)/csps/secrets/$(CSP)/cloud-sa.json
+	echo "{ \"apiKey\": \"$(PACKET_API_TOKEN)\", \"projectID\":\"$(PACKET_PROJECT_ID)\"}" > $(DBCFG)/csps/secrets/$(CSP)/cloud-sa.json
+	$(KCTL) create --namespace $(KUBE_NAMESPACE) secret generic packet-cloud-config --from-file=$(DBCFG)/csps/secrets/$(CSP)/cloud-sa.json
 .PHONY: .PHONY kube-csp-secret-install-packet

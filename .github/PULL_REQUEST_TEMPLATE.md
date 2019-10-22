@@ -1,12 +1,3 @@
----
-name: Pull Request
-about: Submit a pull request
-title: ''
-labels: ''
-assignees: '@boz @gosuri'
-
----
-
 <!--- Provide a general summary of your changes in the Title above -->
 
 ## Description
