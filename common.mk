@@ -1,8 +1,12 @@
+include $(BASEDIR)/env.mk
 include $(BASEDIR)/db.mk
 
 setup: db-setup
 
-HOST 				:= node.$(MACHINE_ZONE) # default host
+# The first host in the index 
+# is the default host
+#
+HOST 				:= $(shell cat $(DBIDX)/HOSTS | head -1) 
 DOMAIN 			:= $(HOST)
 MASTER_IP 	:= $(shell dig +short $(HOST))
 KUBECONFIG	:= $(DATADIR)/db/config/kube/$(HOST)
@@ -24,10 +28,11 @@ comma := ,
 #   2. The list.
 join-with = $(subst $(space),$1,$(strip $2))
 
-kube-config: setup
+kube-config: kube-config-path
 	k3su install --ip $(MASTER_IP) --user $(SSHUSER) --skip-install --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION)
 
 kube-config-path:
+	mkdir -p $(DBCFG)/kube
 	@echo $(KUBECONFIG)
 
 checkaction:

@@ -12,7 +12,7 @@ resource "cloudflare_record" "node" {
   value   = packet_device.node.access_public_ipv4
   type    = "A"
   ttl     = 1
-  proxied = true
+  proxied = false
 }
 
 resource "cloudflare_record" "node_wc" {

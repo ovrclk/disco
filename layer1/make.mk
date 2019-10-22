@@ -1,5 +1,5 @@
 L1DIR ?= $(CURDIR)
-CSP 					 = packet
+CSP 					 ?= packet
 KUBE_NAMESPACE = kube-system
 
 layer1-install: kube-install helm-install kube-csi-install
@@ -32,8 +32,9 @@ layer1-check:
 
 .PHONY: .PHONY layer1-install layer1-remove layer1-install.% layer1-install-all layer1-remove.% layer1-remove-all layer1-check.% layer1-check
 
-kube-install: setup
-	k3su install --ip $(MASTER_IP) --user $(SSHUSER) --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION) #--k3s-extra-args '--no-deploy traefik'
+kube-install: kube-config-path
+	k3su install --ip $(MASTER_IP) --user $(SSHUSER) --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION) \
+		#--k3s-extra-args '--no-deploy traefik'
 
 kube-remove: checkaction
 	ssh $(SSHUSER)@$(MASTER_IP) "k3s-uninstall.sh"
@@ -59,24 +60,24 @@ traefik-remove:
 
 .PHONY: .PHONY traefik-install traefik-remove 
 
-kube-csp-install:
-	KUBECONFIG=$(KUBECONFIG) kubectl apply --wait -f $(L1DIR)/$(CSP)/
-
-kube-csp-remove:
-	kubectl delete --wait -f $(L1DIR)/$(CSP)
-
-.PHONY: .PHONY kube-csp-install kube-csp-remove 
-
-kube-csp-secret-install:
-	$(KC) kubectl apply --wait -f $(DATADIR)/db/config/csps/secrets/$(CSP).yml
-
-kube-csp-secret-remove:
-	$(KC) kubectl delete -f $(DATADIR)/db/config/csps/secrets/$(CSP).yml
-
-kube-csi-install: kube-csp-secret-install
+kube-csi-install:
+	$(MAKE) kube-csp-secret-install.$(CSP)
 	$(KC) helm install $(L1DIR)/csi/$(CSP) -n csi-$(CSP)
 
 kube-csi-remove: kube-csp-secret-remove
 	$(KC) helm del csi-$(CSP) --purge
 
-.PHONY: .PHONY kube-csi-install kube-csi-remove kube-csp-secret-install kube-csp-secret-remove
+kube-csp-secret-install.%:
+	$(eval csp := $(@:kube-csp-secret-install.%=%))
+	$(MAKE) kube-csp-secret-install-$(csp)
+
+kube-csp-secret-remove:
+	$(KC) kubectl delete -f $(DATADIR)/db/config/csps/secrets/$(CSP).yml
+
+.PHONY: .PHONY kube-csi-install kube-csi-install.% kube-csi-remove kube-csi-remove.% kube-csp-secret-install kube-csp-secret-remove
+
+kube-csp-secret-install-packet:
+	mkdir -p $(DATADIR)/db/config/csps/secrets/$(CSP)
+	echo "\{ \"apiKey\": \"$(PACKET_API_KEY)\", \"projectID\":\"$(PACKET_PROJECT_ID)\"}" > $(DBCFG)/csps/secrets/$(CSP)/cloud-sa.json
+	$(KCTL) create --namespace $(KUBE_NAMESPACE) secret generic packet-cloud-config  --from-file=$(DBCFG)/csps/secrets/$(CSP)/cloud-sa.json
+.PHONY: .PHONY kube-csp-secret-install-packet

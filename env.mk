@@ -1,0 +1,2 @@
+TEAM=akashnet
+STACK=devnet
