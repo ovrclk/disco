@@ -6,26 +6,31 @@ tfstatedir ?= $(DATADIR)/state/$(MACHINE_ZONE)/$(TIER)
 tfstatefs  ?= $(tfstatedir)/state.tf
 tfvarfile  ?= $(tfstatedir)/vars.tf.json
 
-layer0-init:
-	mkdir -p $(tfstatedir)
-	terraform init $(tfdir)
-
-layer0-plan: 
-	terraform plan -var-file=$(tfvarfile) -tf-state=$(tfstatefs) $(tfdir)
-
-layer0-apply:
-	terraform apply -var-file=$(tfvarfile) -tf-state=$(tfstatefs) $(tfdir)
-
+layer0-init: layer0-init.$(TIER)
 layer0-init.%:
 	$(eval tier := $(@:layer0-init.%=%))
-	$(MAKE) l0-init-${tier}
+	$(MAKE) layer0-init-${tier}
 
+.PHONY: .PHONY layer0-init layer0-init.% 
+
+layer0-plan: layer0-plan.$(TIER)
 layer0-plan.%: 
 	$(eval tier := $(@:layer0-plan.%=%))
-	$(MAKE) l0-plan-${tier}
+	$(MAKE) layer0-plan-${tier}
 
+.PHONY: .PHONY layer0-plan layer0-plan.% 
+
+layer0-apply: layer0-apply.$(TIER)
 layer0-apply.%:
 	$(eval tier := $(@:layer0-apply.%=%))
-	$(MAKE) l0-apply-${tier}
+	$(MAKE) layer0-apply-${tier}
+
+.PHONY: .PHONY layer0-apply layer0-apply.% 
+
+layer0-destroy: layer0-destroy.$(TIER)
+layer0-destroy.%:
+	$(eval tier := $(@:layer0-destroy.%=%))
+	$(MAKE) layer0-destroy-${tier}
+.PHONY: .PHONY layer0-destroy layer0-destroy.%
 
 include $(L0DIR)/packet/make.mk
