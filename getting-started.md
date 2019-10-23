@@ -7,6 +7,7 @@
 - [Cloudflare](https://cloudflare.com) - Cloudflare is the DNS provider used for the demo deployment. DISCO can also be used with any of the cloud providers [listed here](https://www.terraform.io/docs/providers/index.html). You will need a `CLOUDFLARE_API_TOKEN` with `Zone.Zone` and `Zone.DNS` permissions.
 - [Terraform](https://www.terraform.io) - `terraform` is used to provision resources on Packet. 
 - [`k3sup`](https://github.com/alexellis/k3sup#download-k3sup-tldr) - A great utility for `kubectl config` management! Also makes installing and spinning up a kubernets cluster easy!
+- [`helm`](https://helm.sh/docs/using_helm/) - For installing applications into the cluster. `brew install kubernetes-helm` on mac.
 
 ## Clone the project
 
