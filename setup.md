@@ -24,6 +24,15 @@ export stack=devnet
 export team=akashnet
 ```
 
+set these variables in `env.mk` file
+
+```
+cat > env.mk <<EOF
+TEAM=${team}
+STACK=${stack}
+EOF
+```
+
 ```shell
 keybase git create $stack --team $team
 ```
