@@ -1,13 +1,14 @@
 # Getting Started 
 
-## Dependancies
+## Dependencies
 
 - [Keybase](https://keybase.io/download) - Keybase is used as the git hosting platform for `terraform` state and other sensitive data.
 - [Packet](https://www.packet.com/developers/api/) - Packet is the hosting provider that is being used. DISCO can also be used with any of the cloud providers [listed here](https://www.terraform.io/docs/providers/index.html). You will need both a `PACKET_API_TOKEN` and a `PACKET_PROJECT_ID`.
 - [Cloudflare](https://cloudflare.com) - Cloudflare is the DNS provider used for the demo deployment. DISCO can also be used with any of the cloud providers [listed here](https://www.terraform.io/docs/providers/index.html). You will need a `CLOUDFLARE_API_TOKEN` with `Zone.Zone` and `Zone.DNS` permissions.
 - [Terraform](https://www.terraform.io) - `terraform` is used to provision resources on Packet. 
 - [`k3sup`](https://github.com/alexellis/k3sup#download-k3sup-tldr) - A great utility for `kubectl config` management! Also makes installing and spinning up a kubernets cluster easy!
-- [`helm`](https://helm.sh/docs/using_helm/) - For installing applications into the cluster. `brew install kubernetes-helm` on mac.
+- [Helm](https://helm.sh/docs/using_helm/#installing-helm) - The package manager for Kubernetes.  Helm is the best way to find, share, and use software built for Kubernetes.c
+
 
 ## Clone the project
 
