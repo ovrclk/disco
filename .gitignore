@@ -3,3 +3,4 @@ data
 .env
 .tf*
 .terraform
+env.mk

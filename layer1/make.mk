@@ -33,7 +33,7 @@ layer1-check:
 .PHONY: .PHONY layer1-install layer1-remove layer1-install.% layer1-install-all layer1-remove.% layer1-remove-all layer1-check.% layer1-check
 
 kube-install: kube-config-path
-	k3su install --ip $(MASTER_IP) --user $(SSHUSER) --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION) \
+	k3sup install --ip $(MASTER_IP) --user $(SSHUSER) --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION) \
 		#--k3s-extra-args '--no-deploy traefik'
 
 kube-remove: checkaction

@@ -12,13 +12,13 @@ make layer0-<action>-[stack]
 
 Examples:
 
- - initiallize default stack packet:
+ - Initiallize default stack, `packet`:
     ```shell
-    make layer0-init # will 
+    make layer0-init
     ```
-- initiallize default akash testnet stack
+- Initiallize `akash-packet` stack
     ```shell
-    make layer0-init.akash-test 
+    make layer0-init-akash-packet 
     ```
 
 ### Available Commands
@@ -34,18 +34,20 @@ make layer0-destroy
 
 ### 1. Setup Credentials
 
-```
-# packet
+```shell
+# packet api keys in profile
 echo $PACKET_TOKEN > data/db/keys/packet.api.token
+
+# packet project id in project home URL
 echo $PACKET_PROJECT_ID > data/db/keys/packet.project.id
 
-## cloudflare
+## cloudflare api keys in profile
 echo $CLOUDFLARE_API_TOKEN > data/db/keys/cloudflare.api.token
 ```
 
 ### 2.Provision Machines
 
 ```
-make layer0-init.packet
-make layer0-apply.packet
+make layer0-init-packet
+make layer0-apply-packet
 ```
