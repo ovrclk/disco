@@ -6,7 +6,7 @@ setup: db-setup
 # The first host in the index 
 # is the default host
 #
-HOST 				:= $(shell cat $(DBIDX)/HOSTS | head -1) 
+HOST 				:= $(shell [ -f $(DBIDX)/HOSTS ] && cat $(DBIDX)/HOSTS | head -1) 
 DOMAIN 			:= $(HOST)
 MASTER_IP 	:= $(shell dig +short $(HOST))
 KUBECONFIG	:= $(DATADIR)/db/config/kube/$(HOST)
@@ -16,7 +16,7 @@ RELEASE 		:= kernel
 KC					:= KUBECONFIG=$(KUBECONFIG)
 KCTL 				:= $(KC) kubectl
 
-ALL_HOSTS =  $(shell cat $(DATADIR)/db/index/HOSTS)
+ALL_HOSTS =  $(shell [ -f $(DBIDX)/HOSTS ] && cat $(DBIDX)/HOSTS)
 
 # helpers
 # a literal space.

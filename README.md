@@ -8,6 +8,10 @@ Decentralized Infrastructure for Serverless Computing Operations (DISCO) is a se
 
 Check out this [announcement](https://techcrunch.com/2017/11/21/overclock-labs-bets-on-kubernetes-to-help-companies-automate-their-cloud-infrastructure) post about DISCO.
 
+## Getting Started
+
+If you would like to get started using DISCO with some defaults (Packet for servers, Cloudflare for routing), check out our [Getting Started](getting-started) guide!
+
 ## The Disco Way
 
 DISCO is a methodology and a framework for deploying modern, scalable and secure services.

@@ -1,6 +1,6 @@
 # DISCO Makefile
 #
-# Please read setup.md before using DISCO
+# Please read getting-started.md before using DISCO
 #
 BASEDIR = $(PWD)
 include common.mk

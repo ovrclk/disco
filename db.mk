@@ -1,4 +1,4 @@
-# Config database setup, see USAGE.md for details
+# Config database setup, see getting-started.md for details
 #
 DATA_REPO ?= keybase://team/$(TEAM)/$(STACK)
 DATADIR   ?= $(BASEDIR)/data
@@ -23,7 +23,7 @@ GITCMD = git --git-dir $(DATADIR)/.git --work-tree $(DATADIR)
 db-save: db-commit db-rebase db-push
 
 db-setup: 
-	git clone $(DATA_REPO) $(DATDIR)
+	git clone $(DATA_REPO) $(DATADIR)
 	mkdir -p $(DBIDX) $(DBCFG)/providers $(DBCFG)/nodes $(DBKEY)
 
 # Resets the DB, use with caution
