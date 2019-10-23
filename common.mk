@@ -47,4 +47,7 @@ showip:
 ssh:
 	ssh -o StrictHostKeyChecking=no $(SSHUSER)@$(MASTER_IP)
 
+hosts:
+	@echo $(DB_HOSTS)
+
 .PHONY: .PHONY setup clean kube-config kube-config-path checkaction showip

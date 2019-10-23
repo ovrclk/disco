@@ -10,16 +10,16 @@ tfopts := -state '$(tfstatefs)'  \
 		-var 'stack_zone=$(STACK_ZONE)' \
 
 layer0-init-packet:
-	mkdir -p $(tfstatedir)
-	terraform init $(tfdir)
+	@mkdir -p $(tfstatedir)
+	@terraform init $(tfdir)
 
 layer0-plan-packet:
-	terraform plan $(tfopts) $(tfdir) 
+	@terraform plan $(tfopts) $(tfdir) 
 
 layer0-apply-packet:
-	terraform apply $(tfopts) $(tfdir) 
+	@terraform apply $(tfopts) $(tfdir) 
 
 layer0-destroy-packet:
-	terraform destroy $(tfopts) $(tfdir) 
+	@terraform destroy $(tfopts) $(tfdir) 
 
 .PHONY: .PHONY layer0-init-packet layer0-plan-packet layer0-apply-packet layer0-destroy-packet
