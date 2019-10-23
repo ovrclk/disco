@@ -73,8 +73,4 @@ echo mydomain1.net > data/db/index/MACHINE_ZONE
 
 > NOTE: Both of the above domains can be the same one.
 
-<<<<<<< HEAD
 Next its time to [create some infrastructure using `layer0`](layer0/README.md)!
-=======
-Next its time to [create some infrastructure using `layer0`](layer0)!
->>>>>>> a299ee3... add dependencies/helm (#16)
