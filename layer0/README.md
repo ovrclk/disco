@@ -48,6 +48,12 @@ echo $CLOUDFLARE_API_TOKEN > data/db/keys/cloudflare.api.token
 ### 2.Provision Machines
 
 ```
-make layer0-init-packet
-make layer0-apply-packet
+make layer0-init
+make layer0-apply
+```
+
+### 3. Update Config DB
+
+```
+echo node1.${MACHINE_ZONE} > data/db/index/HOSTS
 ```

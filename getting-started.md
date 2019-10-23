@@ -34,14 +34,16 @@ Or add it as a remote to an existing repo with:
 Also, make sure to set these variables in the `env.mk` file at the root of the repository. For the above example it should look like:
 
 ```shell
-echo "TEAM=akashnet" > env.mk
-echo "STACK=dentacoin-dev" > env.mk
+cat > env.mk <<EOF
+TEAM=akashnet
+STACK=dentacoin-dev
+EOF
 ```
 
 The `tfstate` and other sensitive information is stored in a database that holds data specific to this `STACK`. To setup the database then run the following:
 
 ```
-git clone keybase://team/akashnet/devnet data
+git clone keybase://team/akashnet/dentacoin-dev data
 ```
 
 ### Setup the directory structure:
@@ -71,4 +73,4 @@ echo mydomain1.net > data/db/index/MACHINE_ZONE
 
 > NOTE: Both of the above domains can be the same one.
 
-Next its time to [create some infrastructure using `layer0`](layer0)!
+Next its time to [create some infrastructure using `layer0`](layer0/README.md)!
