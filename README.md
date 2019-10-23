@@ -10,7 +10,7 @@ Check out this [announcement](https://techcrunch.com/2017/11/21/overclock-labs-b
 
 ## Getting Started
 
-If you would like to get started using DISCO with some defaults (Packet for servers, Cloudflare for routing), check out our [Getting Started](getting-started) guide!
+If you would like to get started using DISCO with some defaults (Packet for servers, Cloudflare for routing), check out our [Getting Started](getting-started.md) guide!
 
 ## The Disco Way
 
@@ -35,7 +35,7 @@ DISCO’s secure, scalable and modular design offers below features:
 
 ## Get Started
 
-To get started, check out [setup guide](setup.md)
+To get started, check out [setup guide](getting-started.md)
 
 ## Motivation
 
