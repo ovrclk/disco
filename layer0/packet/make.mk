@@ -1,6 +1,6 @@
-PACKET_API_TOKEN     ?= $(shell cat $(DBKEY)/packet.api.token)
-PACKET_PROJECT_ID    ?= $(shell cat $(DBKEY)/packet.project.id)
-CLOUDFLARE_API_TOKEN ?= $(shell cat $(DBKEY)/cloudflare.api.token)
+PACKET_API_TOKEN     ?= $(shell [ -f $(DBKEY)/packet.api.token ] && cat $(DBKEY)/packet.api.token)
+PACKET_PROJECT_ID    ?= $(shell [ -f $(DBKEY)/packet.project.id ] && cat $(DBKEY)/packet.project.id)
+CLOUDFLARE_API_TOKEN ?= $(shell [ -f $(DBKEY)/cloudflare.api.token ] && cat $(DBKEY)/cloudflare.api.token)
 
 tfopts := -state '$(tfstatefs)'  \
 		-var 'packet_api_token=$(PACKET_API_TOKEN)' \
