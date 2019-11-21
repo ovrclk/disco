@@ -3,13 +3,13 @@ L3_DOMAIN 	= akashtest.net
 CONFIG_DIR 	?= $(L3DIR)/.data
 PROVIDER 		?= alice
 REGION 			?= sjc
-IMAGE_TAG 	?= 0.5.1
+IMAGE_TAG 	?= 0.5.4-rc3
 AKASH_NS 		?= akash-sys
 HELM_FLAGS 	= #--dry-run --debug
 
 akashd-init:
-	mkdir -p $(DATADIR)/nodes
-	akashd init -t helm -o $(DATADIR)/nodes -n $(call join-with,$(comma),$(NODES)) $(shell akash key show master --public)
+	mkdir -p $(DBCFG)/nodes
+	akashd init -t helm -o $(DBCFG)/nodes -n $(call join-with,$(comma),$(DB_NODES)) $(shell akash key show master --public)
 
 akash-remove: delmanifests
 	$(KC) helm list | grep akash-sys | awk '{print $$1}' | xargs helm del --purge $(HELM_FLAGS)
@@ -20,7 +20,7 @@ akash-node-install:
 	$(KC) helm install $(L3DIR)/akash-node $(HELM_FLAGS) --namespace=$(AKASH_NS) \
 		--name $(NODE) \
 		--set "image.tag=$(IMAGE_TAG)" \
-		--set "ingress.domain=$(NODE).$(L3_DOMAIN)" -f $(DATADIR)/db/config/nodes/$(NODE).yaml
+		--set "ingress.domain=$(NODE).$(L3_DOMAIN)" -f $(DBCFG)/nodes/$(NODE).yaml
 
 akash-node-install-all:
 	$(foreach node, $(NODES), $(MAKE) akash-node-install.$(node))
@@ -43,7 +43,11 @@ akash-node-remove.%:
 
 .PHONY: .PHONY akash-node-remove akash-node-remove.% akash-node-remove-all
 
-akash-provider-register: 
+akash-provider-gen:
+	[[ -f "$(DBCFG)/providers/$(PROVIDER).yml" ]] \
+		|| sed 's/%%HOST_URI%%/http:\/\/$(PROVIDER).$(L3_DOMAIN)/g; s/%%REGION%%/$(REGION)/g' $(L3DIR)/provider.template.yaml > $(DBCFG)/providers/$(PROVIDER).yml
+
+akash-provider-register: akash-provider-gen
 	[[ -f "$(DB)/keys/$(PROVIDER).address" ]] || akash provider add $(DBCFG)/providers/$(PROVIDER).yml -k $(PROVIDER) \
 			| grep Key: \
 			| awk '{print $$2}' > $(DB)/keys/$(PROVIDER).address
