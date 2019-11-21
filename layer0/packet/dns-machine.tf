@@ -8,7 +8,7 @@ data "cloudflare_zones" "node" {
 
 resource "cloudflare_record" "node" {
   zone_id = "${lookup(data.cloudflare_zones.node.zones[0], "id")}"
-  name    = "node"
+  name    = "${var.machine_name}.${var.packet_facility}"
   value   = packet_device.node.access_public_ipv4
   type    = "A"
   ttl     = 1
@@ -17,7 +17,7 @@ resource "cloudflare_record" "node" {
 
 resource "cloudflare_record" "node_wc" {
   zone_id = "${lookup(data.cloudflare_zones.node.zones[0], "id")}"
-  name    = "*.node"
+  name    = "*.${var.machine_name}.${var.packet_facility}"
   value   = packet_device.node.access_public_ipv4
   type    = "A"
   ttl     = 1

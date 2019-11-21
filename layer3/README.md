@@ -1,37 +1,47 @@
-## Akash Node Deploy
+# Layer 3
 
-1. First, create a key for your node.
+## Akash Nodes
 
-```sh
-$ akash key create node
+In this layer we'll install Akash nodes
+
+### Generate Genesis
+
+#### 1.Create Master and Node Keys
+
+```
+akash key create master
 ```
 
-Since we'll be using our newly generated Key multiple times throughout the guide, lets export the public key address to an environment variable. Akash CLI provides shell friendly mode `-m, --mode` to do this easily.
+#### 2. Add Nodes to DB index
 
-```sh
-$ eval $(akash key show node -m shell)
+Add nodes to DB index:
+
+```
+cat > data/db/index/NODES <<EOF
+node1
+node2
+node3
+EOF
 ```
 
-You can type `echo akash (tab)` do display all the akash variables in your session
+#### 3. Create Helm configuration with genesis file
 
-2. Generate genesis file
-
-```sh
-$ akashd init $akash_display_key_0_public_key_address
+```
+make akashd-init
 ```
 
+#### 4. Install Akash Nodes
 
-
-Providers
-
-1) Create Key
-2) Register
-
-```sh
-$ akash provider create /config/provider.yml -k master -m shell
+```
+make akash-node-install L3_DOMAIN=node.sjc1.ovrclk1.com HOST=node.sjc1.ovrclk1.com NODE=node1
+make akash-node-install L3_DOMAIN=node.sjc1.ovrclk1.com HOST=node.sjc1.ovrclk1.com NODE=node2
+make akash-node-install L3_DOMAIN=node.sjc1.ovrclk1.com HOST=node.sjc1.ovrclk1.com NODE=node3
 ```
 
-3) Run
-```sh
-$ akash provider create /config/provider.yml -k master -m shell
+#### 5. Verify Nodes
+
+### Akash Provider
+
+```
+
 ```

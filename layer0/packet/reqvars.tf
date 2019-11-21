@@ -1,3 +1,8 @@
+variable "machine_name" {
+  type    = "string"
+  default = "node"
+}
+
 variable "machine_zone" {
   type = "string"
 }

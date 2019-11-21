@@ -30,6 +30,8 @@ spec:
           env:
             - name: AKASHD_DATA
               value: /data
+            - name: AKASHD_RPC_LADDR
+              value: "tcp://0.0.0.0:{{ .Values.akashd.ports.rpc }}"
             - name: AKASHD_P2P_SEEDS
               value: "{{- range $i,$p := .Values.node.peers }}{{if $i}},{{end}}{{ $p.id }}@{{ $p.name }}-akash-node:{{ $.Values.akashd.ports.p2p }}{{- end }}"
           ports:

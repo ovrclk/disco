@@ -1,5 +1,5 @@
 resource "packet_device" "node" {
-  hostname         = "n1.${var.packet_plan}"
+  hostname         = "${var.machine_name}.${var.packet_facility}.${var.machine_zone}"
   plan             = var.packet_plan
   facilities       = ["${var.packet_facility}"]
   operating_system = var.packet_os
