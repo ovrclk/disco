@@ -31,7 +31,7 @@ variable "packet_os" {
 
 variable "packet_plan" {
   type    = "string"
-  default = "c1.small.x86"
+  default = "t1.small.x86"
 }
 
 variable "packet_facility" {
