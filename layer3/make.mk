@@ -5,7 +5,9 @@ PROVIDER 		?= alice
 REGION 			?= sjc
 IMAGE_TAG 	?= 0.5.4-rc3
 AKASH_NS 		?= akash-sys
-HELM_FLAGS 	= #--dry-run --debug
+HELM_REPO   = helm.akash.network
+HELM_FLAGS 	= --repo $(HELM_REPO) --dry-run --debug
+
 
 akashd-init:
 	mkdir -p $(DBCFG)/nodes
@@ -17,7 +19,7 @@ akash-remove: delmanifests
 
 akash-node-install:
 	$(KC) kubectl create namespace $(AKASH_NS) || true
-	$(KC) helm install $(L3DIR)/akash-node $(HELM_FLAGS) --namespace=$(AKASH_NS) \
+	$(KC) helm install $(HELM_FLAGS) akash-node --namespace=$(AKASH_NS) \
 		--name $(NODE) \
 		--set "image.tag=$(IMAGE_TAG)" \
 		--set "ingress.domain=$(NODE).$(L3_DOMAIN)" -f $(DBCFG)/nodes/$(NODE).yaml
@@ -56,7 +58,7 @@ akash-provider-register: akash-provider-gen
 
 akash-provider-install: akash-provider-key-install akash-provider-register
 	$(KC) kubectl create namespace $(AKASH_NS) || true
-	$(KC) helm install $(L3DIR)/akash-provider $(HELM_FLAGS) --namespace=$(AKASH_NS) \
+	$(KC) helm install $(HELM_FLAGS) akash-provider --namespace=$(AKASH_NS) \
 		--name "$(PROVIDER)" \
 		--set "image.tag=$(IMAGE_TAG)" \
 		--set "ingress.domain=$(PROVIDER).$(L3_DOMAIN)" \
