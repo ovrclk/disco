@@ -2,7 +2,7 @@ L1DIR ?= $(CURDIR)
 CSP 					 ?= packet
 KUBE_NAMESPACE = kube-system
 
-layer1-install: kube-install helm-install kube-csi-install
+layer1-install: kube-install helm-install 
 
 layer1-remove: kube-remove 
 
