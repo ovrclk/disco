@@ -6,15 +6,15 @@ setup: db-setup
 # The first host in the index 
 # is the default host
 #
-HOST 				:= $(shell [ -f $(DBIDX)/HOSTS ] && cat $(DBIDX)/HOSTS | head -1) 
-DOMAIN 			:= $(HOST)
-MASTER_IP 	:= $(shell dig +short $(HOST))
-KUBECONFIG	:= $(DATADIR)/db/config/kube/$(HOST)
+HOST        := $(shell [ -f $(DBIDX)/HOSTS ] && cat $(DBIDX)/HOSTS | head -1)
+DOMAIN      := $(HOST)
+MASTER_IP   ?= $(shell dig +short $(HOST))
+KUBECONFIG  := $(DATADIR)/db/config/kube/$(HOST)
 K3S_VERSION := v0.9.0
-SSHUSER 		:= root
-RELEASE 		:= kernel
-KC					:= KUBECONFIG=$(KUBECONFIG)
-KCTL 				:= $(KC) kubectl
+SSHUSER     := root
+RELEASE     := kernel
+KC          := KUBECONFIG=$(KUBECONFIG)
+KCTL        := $(KC) kubectl
 
 ALL_HOSTS =  $(shell [ -f $(DBIDX)/HOSTS ] && cat $(DBIDX)/HOSTS)
 
