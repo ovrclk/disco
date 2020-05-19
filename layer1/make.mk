@@ -1,6 +1,7 @@
 L1DIR ?= $(CURDIR)
 CSP 					 ?= packet
 KUBE_NAMESPACE = kube-system
+SSH_KEY ?= $(HOME)/.ssh/id_rsa
 
 layer1-install: kube-install helm-install 
 
@@ -34,7 +35,7 @@ layer1-check:
 
 kube-install: kube-config-path
 	k3sup install --ip $(MASTER_IP) --user $(SSHUSER) --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION) \
-		#--k3s-extra-args '--no-deploy traefik'
+		--ssh-key=$(SSH_KEY) #--k3s-extra-args '--no-deploy traefik'
 
 kube-remove: checkaction
 	ssh $(SSHUSER)@$(MASTER_IP) "k3s-uninstall.sh"
