@@ -1,9 +1,9 @@
-L1DIR ?= $(CURDIR)
-CSP 					 ?= packet
-KUBE_NAMESPACE = kube-system
-SSH_KEY ?= $(HOME)/.ssh/id_rsa
+L1DIR          ?= $(CURDIR)
+CSP            ?= packet
+KUBE_NAMESPACE  = kube-system
+SSH_KEY        ?= $(HOME)/.ssh/id_rsa
 
-layer1-install: kube-install helm-install 
+layer1-install: kube-install
 
 layer1-remove: kube-remove 
 
@@ -43,15 +43,10 @@ kube-remove: checkaction
 
 .PHONY: .PHONY kube-install kube-remove 
 
-helm-install:
-	KUBECONFIG=$(KUBECONFIG) kubectl apply -f $(L1DIR)/helm.yml
-	KUBECONFIG=$(KUBECONFIG) helm init --service-account tiller --upgrade --wait
-
 helm-remove:
 	kubectl delete -f $(L1DIR)/rbac.yml
-	helm reset 
 
-.PHONY: .PHONY helm-install helm-remove
+.PHONY: .PHONY helm-remove
 
 traefik-install:
 	KUBECONFIG=$(KUBECONFIG) helm install stable/traefik -n traefix -f traefik/config.yml --namespace kube-system
