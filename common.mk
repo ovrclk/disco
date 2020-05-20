@@ -29,7 +29,7 @@ comma := ,
 join-with = $(subst $(space),$1,$(strip $2))
 
 kube-config: kube-config-path
-	k3su install --ip $(MASTER_IP) --user $(SSHUSER) --skip-install --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION)
+	k3sup install --ip $(MASTER_IP) --user $(SSHUSER) --skip-install --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION)
 
 kube-config-path:
 	@mkdir -p $(DBCFG)/kube
