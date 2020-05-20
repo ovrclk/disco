@@ -15,6 +15,7 @@ SSHUSER     := root
 RELEASE     := kernel
 KC          := KUBECONFIG=$(KUBECONFIG)
 KCTL        := $(KC) kubectl
+SSH_KEY     ?= $(HOME)/.ssh/id_rsa
 
 ALL_HOSTS =  $(shell [ -f $(DBIDX)/HOSTS ] && cat $(DBIDX)/HOSTS)
 
@@ -29,7 +30,7 @@ comma := ,
 join-with = $(subst $(space),$1,$(strip $2))
 
 kube-config: kube-config-path
-	k3sup install --ip $(MASTER_IP) --user $(SSHUSER) --skip-install --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION)
+	k3sup install --ip $(MASTER_IP) --user $(SSHUSER) --ssh-key $(SSH_KEY) --skip-install --local-path $(KUBECONFIG) --k3s-version=$(K3S_VERSION)
 
 kube-config-path:
 	@mkdir -p $(DBCFG)/kube
