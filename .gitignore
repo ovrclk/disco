@@ -1,6 +1,2 @@
 .DS_Store
-data
-.env
-.tf*
-.terraform
-env.mk
+*.kubeconfig

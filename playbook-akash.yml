@@ -1,0 +1,280 @@
+---
+
+- hosts: kube_control_plane
+  vars_prompt:
+    - name: akash_password
+      prompt: Enter the Akash password that unlocks your key
+      unsafe: yes
+      private: yes
+  tasks:
+
+    # Dependencies
+
+    - name: Collect Kube Config
+      shell: cat /root/.kube/config
+      register: kube_config
+
+    - name: Set IP Address of Master
+      set_fact:
+        k8s_master: "{{ ansible_ssh_host }}"
+
+    - name: Write a kubeconfig file
+      template:
+        src: "templates/kubeconfig.j2"
+        dest: "{{ envname }}.{{ region }}.kubeconfig"
+        force: yes
+        backup: no
+      vars:
+        kubeconfig: "{{ kube_config.stdout | from_yaml }}"
+      delegate_to: localhost
+
+    - name: Install Dependencies
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - curl
+        - python3-pip
+
+    - name: Install Kubernetes Python Package
+      pip:
+        name: kubernetes
+
+    - name: Label Ingress nodes
+      shell: kubectl label nodes --overwrite {{ item }} akash.network/role=ingress
+      with_items: "{{ groups['kube_node'] }}"
+
+    # Akash Config
+
+    - name: Get Akash version
+      shell: curl -s "https://raw.githubusercontent.com/ovrclk/net/master/{{ net }}/version.txt"
+      register: akash_version
+    
+    - name: Get Akash node
+      shell: curl -s "https://raw.githubusercontent.com/ovrclk/net/master/{{ net }}/rpc-nodes.txt" | head -1
+      register: akash_node
+
+    - name: Get Akash Chain ID
+      shell: curl -s "https://raw.githubusercontent.com/ovrclk/net/master/{{ net }}/chain-id.txt"
+      register: chain_id
+
+    - name: Install Akash
+      shell: curl https://raw.githubusercontent.com/ovrclk/akash/master/godownloader.sh | sh -s -- "v{{ akash_version.stdout }}"
+
+    - name: Validate Balance
+      shell: /root/bin/akash query bank balances --node {{ akash_node.stdout }} {{ akash_account_address }}
+
+    - name: Write provider.yaml
+      template:
+        src: "templates/provider.yaml.j2"
+        dest: "/root/provider.yaml"
+        force: yes
+        backup: no
+    
+    - name: Write Akash private key
+      copy:
+        content: "{{ akash_key }}"
+        dest: "/root/.akash/key.pem"
+        force: yes
+        backup: no
+    
+    - name: Write Password file
+      copy:
+        content: "{{ akash_password }}"
+        dest: "/root/.akash/key-pass.txt"
+        force: yes
+        backup: no
+    
+    - name: Remove Key if it exists
+      shell: yes | /root/bin/akash --keyring-backend=test keys delete {{ akash_account_address }} || true
+
+    - name: Import Akash key
+      shell: cat /root/.akash/key-pass.txt | { cat ; echo ; } | /root/bin/akash keys import --keyring-backend=test {{ akash_account_address }} /root/.akash/key.pem
+      register: out
+      failed_when: "'error message' in out.stderr"
+
+    - name: Register Provider
+      shell: yes | /root/bin/akash tx provider update /root/provider.yaml --from {{ akash_account_address }} --keyring-backend=test --node={{ akash_node.stdout }} --chain-id={{ chain_id.stdout }} --fees 5000uakt || true
+
+    - name: Issue a Provider cert
+      shell: yes | /root/bin/akash tx cert create server {{ envname}}.{{ region}}.{{ provider_domain }} --chain-id {{ chain_id.stdout }} --keyring-backend test --from {{ akash_account_address }} --node={{ akash_node.stdout }} --fees 5000uakt || true
+
+    - name: Collect Provider cert
+      shell: cat /root/.akash/{{ akash_account_address }}.pem
+      register: provider_cert
+
+    # ArgoCD Config
+
+    - name: Install Helm
+      shell: curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+      args:
+        warn: no
+  
+    - name: Install Helm Diff Plugin
+      kubernetes.core.helm_plugin:
+        plugin_path: https://github.com/databus23/helm-diff
+        state: present
+
+    - name: Add Argo Helm Repo
+      kubernetes.core.helm_repository:
+        name: argo
+        repo_url: https://argoproj.github.io/argo-helm
+
+    - name: Install Argo Chart
+      kubernetes.core.helm:
+        name: argocd
+        namespace: default
+        chart_ref: argo/argo-cd
+        values:
+          argo-cd:
+            installCRDs: false
+            global:
+              image:
+                tag: v1.8.1
+            dex:
+              enabled: false
+            server:
+              extraArgs:
+                - --insecure
+              config:
+                repositories: |
+                  - type: helm
+                    name: stable
+                    url: https://charts.helm.sh/stable
+                  - type: helm
+                    name: argo-cd
+                    url: https://argoproj.github.io/argo-helm
+                  - type: helm
+                    name: akash
+                    url: https://ovrclk.github.io/helm-charts
+                  - type: helm
+                    name: rook
+                    url: https://charts.rook.io/release
+
+    - name: Install Ingress-Nginx
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: ingress-nginx
+            namespace: default
+            finalizers:
+            - resources-finalizer.argocd.argoproj.io
+          spec:
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: default
+            project: default
+            source:
+              chart: ingress-nginx
+              helm:
+                values: |
+                  controller:
+                    service:
+                      type: NodePort
+              repoURL: https://kubernetes.github.io/ingress-nginx
+              targetRevision: 4.0.5
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+    - name: Install Inventory Operator
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: inventory-operator
+            namespace: default
+            finalizers:
+            - resources-finalizer.argocd.argoproj.io
+          spec:
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: default
+            project: default
+            source:
+              chart: inventory-operator
+              helm:
+                values: |
+                  serviceAccount:
+                    create: true
+              repoURL: https://ovrclk.github.io/helm-charts
+              targetRevision: 0.2.0
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+    - name: Install Ceph Operator
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: rook-ceph
+            namespace: default
+            finalizers:
+            - resources-finalizer.argocd.argoproj.io
+          spec:
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: default
+            project: default
+            source:
+              chart: rook-ceph
+              helm:
+                values: |
+                  currentNamespaceOnly: false
+              repoURL: https://charts.rook.io/release
+              targetRevision: v1.7.4
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
+
+    - name: Install Akash Provider
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Application
+          metadata:
+            name: akash-provider
+            namespace: default
+            finalizers:
+            - resources-finalizer.argocd.argoproj.io
+          spec:
+            destination:
+              server: https://kubernetes.default.svc
+              namespace: default
+            project: default
+            source:
+              chart: provider
+              helm:
+                values: |
+                  service:
+                    type: ClusterIP
+                  ingress:
+                    domain: {{ envname }}.{{ region }}.{{ provider_domain }}
+                  akash_client:
+                    from: {{ akash_account_address }}
+                    key: |
+                      {{ akash_key | b64encode | indent( width=4, indentfirst=False ) }}
+                    keysecret: {{ akash_password | b64encode }}
+                    node: {{ akash_node.stdout }}
+                    chain-id: {{ chain_id.stdout }}
+                  akash_provider:
+                    providercert: |
+                      {{ provider_cert.stdout | b64encode | indent( width=4, indentfirst=False ) }}
+              repoURL: https://ovrclk.github.io/helm-charts
+              targetRevision: 0.59.0
+            syncPolicy:
+              automated:
+                prune: true
+                selfHeal: true
