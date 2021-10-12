@@ -1,0 +1,38 @@
+all:
+  vars:
+    ansible_connection: ssh
+    ansible_user: root
+    gvisor_enable: true
+    container_manager: containerd
+    etcd_deployment_type: host
+    envname: CHANGEME                # Some cool environment name e.g. myenv
+    net: mainnet                     # mainnet / testnet / edgenet
+    region: CHANGEME                 # Used for namespacing e.g. myenv.us-east-1.mydomain.com
+    provider_domain: CHANGEME        # A domain name you own e.g. mydomain.com
+    akash_account_address: CHANGEME  # Your address from: akash keys show <key name> -a
+    akash_key: |                     # Your Akash private key
+      -----BEGIN TENDERMINT PRIVATE KEY-----
+      CHANGEME
+      -----END TENDERMINT PRIVATE KEY-----
+      
+  hosts:
+    k8s-master: { ansible_ssh_host: x.x.x.x } #
+    k8s-node-0: { ansible_ssh_host: x.x.x.x } # Change these x.x.x.x IP addresses
+    k8s-node-1: { ansible_ssh_host: x.x.x.x } #
+  children:
+    kube_control_plane:
+      hosts:
+        k8s-master:
+    kube_node:
+      hosts:
+        k8s-node-0:
+        k8s-node-1:
+    etcd:
+      hosts:
+        k8s-master:
+        k8s-node-0:
+        k8s-node-1:
+    k8s_cluster:
+      children:
+        kube_control_plane:
+        kube_node:

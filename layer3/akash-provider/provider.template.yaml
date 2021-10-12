@@ -1,6 +1,0 @@
-hostURI: "%%HOST_URI%%"
-attributes:
-  - name: region
-    value: "%%REGION%%"
-  - name: sgx
-    value: enabled
